@@ -3,8 +3,16 @@
   
   # Phim
   
+  [![GitHub release](https://img.shields.io/github/v/release/roelvangils/phim?include_prereleases&style=flat-square)](https://github.com/roelvangils/phim/releases)
+  [![License](https://img.shields.io/github/license/roelvangils/phim?style=flat-square)](LICENSE)
+  [![Platform](https://img.shields.io/badge/platform-macOS%2015.0%2B-blue?style=flat-square)](https://www.apple.com/macos/)
+  [![Swift](https://img.shields.io/badge/Swift-5.9-orange?style=flat-square)](https://swift.org)
+  [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-brightgreen?style=flat-square)](https://roelvangils.github.io/phim/)
+  
   A minimalistic macOS web viewer designed for focused reading and content consumption.  
   Phim provides a distraction-free browsing experience with native macOS integration and intelligent vibrancy effects.
+  
+  [**Download**](https://github.com/roelvangils/phim/releases/latest) • [**Website**](https://roelvangils.github.io/phim/) • [**Documentation**](#usage)
 </div>
 
 ## Features
