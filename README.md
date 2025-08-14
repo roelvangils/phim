@@ -9,9 +9,9 @@
   [![Swift](https://img.shields.io/badge/Swift-5.9-orange?style=flat-square)](https://swift.org)
   [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-brightgreen?style=flat-square)](https://roelvangils.github.io/phim/)
   
-  **This is not a browser.**  
-  It's an ephemeral reading space. No history. No cookies. No distractions.  
-  Perfect companion for [Velja](https://sindresorhus.com/velja) and [Hyperduck](https://sindresorhus.com/hyperduck) workflows.
+  Phim is a superfast, ephemeral webpage viewer.  
+  It has no history, cookies, navigation, or distractions.  
+  It's the perfect companion for [Velja](https://sindresorhus.com/velja) and [Hyperduck](https://sindresorhus.com/hyperduck).
   
   [**Download**](https://github.com/roelvangils/phim/releases/latest) • [**Website**](https://roelvangils.github.io/phim/) • [**Documentation**](#usage)
 </div>
