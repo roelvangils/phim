@@ -1,0 +1,18 @@
+#!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+APP_PATH="$SCRIPT_DIR/Phim.app"
+
+if [ ! -d "$APP_PATH" ]; then
+    echo "Error: Phim.app not found."
+    exit 1
+fi
+
+# Check if input is being piped
+if [ ! -t 0 ]; then
+    URL=$(cat)
+    open -n "$APP_PATH" --args "$URL"
+elif [ $# -gt 0 ]; then
+    open -n "$APP_PATH" --args "$1"
+else
+    open -n "$APP_PATH"
+fi

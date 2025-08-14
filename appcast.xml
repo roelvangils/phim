@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" xmlns:dc="http://purl.org/dc/elements/1.1/">
+    <channel>
+        <title>Phim Changelog</title>
+        <link>https://github.com/yourusername/phim/releases/latest/download/appcast.xml</link>
+        <description>Most recent changes with links to updates.</description>
+        <language>en</language>
+        
+        <!-- Example update item - duplicate and modify for each release -->
+        <item>
+            <title>Version 1.0.1</title>
+            <description><![CDATA[
+                <h2>What's New in Version 1.0.1</h2>
+                <ul>
+                    <li>Added automatic update checking via Sparkle framework</li>
+                    <li>Improved vibrancy performance</li>
+                    <li>Fixed clipboard URL detection issues</li>
+                </ul>
+            ]]></description>
+            <pubDate>Mon, 14 Jan 2025 12:00:00 +0000</pubDate>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <enclosure 
+                url="https://github.com/yourusername/phim/releases/download/v1.0.1/Phim-1.0.1.zip" 
+                sparkle:version="2"
+                sparkle:shortVersionString="1.0.1"
+                sparkle:edSignature="YOUR_EDDSA_SIGNATURE_HERE"
+                length="12345678"
+                type="application/octet-stream" />
+        </item>
+        
+        <!-- Add more items here for each release -->
+        
+    </channel>
+</rss>

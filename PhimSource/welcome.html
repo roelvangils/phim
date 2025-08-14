@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Phim</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            text-align: center;
+            max-width: 600px;
+        }
+        
+        h1 {
+            font-size: 4em;
+            margin-bottom: 0.2em;
+            font-weight: 300;
+            letter-spacing: -2px;
+        }
+        
+        .tagline {
+            font-size: 1.5em;
+            margin-bottom: 2em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .shortcuts {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            margin-top: 2em;
+        }
+        
+        .shortcuts h2 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 1.3em;
+            margin-bottom: 1em;
+        }
+        
+        .shortcut-list {
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .shortcut {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .key {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+        
+        .usage {
+            margin-top: 3em;
+            font-size: 0.9em;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phim</h1>
+        <p class="tagline">A minimalistic web viewer for focused reading</p>
+        
+        <div class="shortcuts">
+            <h2>Keyboard Shortcuts</h2>
+            <div class="shortcut-list">
+                <div class="shortcut">
+                    <span class="key">O</span>
+                    <span>Open in your default browser</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">R</span>
+                    <span>Reload the current page</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">C</span>
+                    <span>Copy the current URL</span>
+                </div>
+                <div class="shortcut">
+                    <span class="key">X</span>
+                    <span>Close Phim</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="usage">
+            <p>Launch from terminal: <code>phim https://example.com</code></p>
+            <p>Or pipe URLs: <code>echo "https://example.com" | phim</code></p>
+        </div>
+    </div>
+</body>
+</html>
