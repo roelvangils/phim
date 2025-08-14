@@ -17,7 +17,7 @@
 </div>
 
 <div align="center">
-  <img src="screenshot.png" alt="Phim Screenshot" width="100%" style="max-width: 1200px; margin: 2rem 0; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+  <img src="screenshot.png" alt="Phim Screenshot" width="100%" style="max-width: 1200px; margin: 2rem 0;">
 </div>
 
 ## Why Phim?
