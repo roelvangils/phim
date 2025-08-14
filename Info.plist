@@ -29,7 +29,7 @@
     
     <!-- Sparkle Configuration -->
     <key>SUFeedURL</key>
-    <string>https://github.com/yourusername/phim/releases/latest/download/appcast.xml</string>
+    <string>https://github.com/roelvangils/phim/releases/latest/download/appcast.xml</string>
     <key>SUEnableAutomaticChecks</key>
     <true/>
     <key>SUScheduledCheckInterval</key>
