@@ -15,6 +15,10 @@
   [**Download**](https://github.com/roelvangils/phim/releases/latest) • [**Website**](https://roelvangils.github.io/phim/) • [**Documentation**](#usage)
 </div>
 
+<div align="center">
+  <img src="screenshot.png" alt="Phim Screenshot" width="100%" style="max-width: 1200px; margin: 2rem 0; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
+</div>
+
 ## Features
 
 - **Minimalist Design**: Borderless window with floating toolbar that appears on hover
@@ -128,7 +132,7 @@ Contributions are welcome! Please feel free to submit pull requests or open issu
 
 ## Author
 
-Created by Roel van Gils
+Created by Roel Van Gils
 
 ## Acknowledgments
 

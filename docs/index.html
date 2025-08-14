@@ -49,7 +49,7 @@
         }
         
         .hero {
-            min-height: 100vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -276,6 +276,38 @@
                 justify-content: center;
             }
         }
+        
+        .screenshot-section {
+            padding: 0 2rem 4rem;
+            background: linear-gradient(180deg, var(--bg) 0%, var(--card-bg) 100%);
+        }
+        
+        .screenshot {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            border-radius: 16px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .screenshot img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -303,6 +335,14 @@
             </div>
         </div>
     </div>
+    
+    <section class="screenshot-section">
+        <div class="container">
+            <div class="screenshot">
+                <img src="https://raw.githubusercontent.com/roelvangils/phim/main/screenshot.png" alt="Phim in action - showing a clean, minimalistic interface">
+            </div>
+        </div>
+    </section>
     
     <section class="features">
         <div class="container">
@@ -411,7 +451,7 @@ echo "https://example.com" | phim
     
     <footer class="footer">
         <div class="container">
-            <p>Created with ❤️ by <a href="https://github.com/roelvangils">Roel van Gils</a></p>
+            <p>Created with ❤️ by <a href="https://github.com/roelvangils">Roel Van Gils</a></p>
             <p>Licensed under MIT • <a href="https://github.com/roelvangils/phim">GitHub</a> • <a href="https://github.com/roelvangils/phim/releases">Releases</a></p>
         </div>
     </footer>
