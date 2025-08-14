@@ -1,6 +1,11 @@
-# Phim
-
-A minimalistic macOS web viewer designed for focused reading and content consumption. Phim provides a distraction-free browsing experience with native macOS integration and intelligent vibrancy effects.
+<div align="center">
+  <img src="icon.png" alt="Phim Icon" width="128" height="128">
+  
+  # Phim
+  
+  A minimalistic macOS web viewer designed for focused reading and content consumption.  
+  Phim provides a distraction-free browsing experience with native macOS integration and intelligent vibrancy effects.
+</div>
 
 ## Features
 
