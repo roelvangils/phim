@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Phim - Minimalistic macOS Web Viewer</title>
-    <meta name="description" content="A distraction-free web viewer for macOS with intelligent vibrancy effects and privacy-focused browsing.">
+    <title>Phim - This is not a browser</title>
+    <meta name="description" content="An ephemeral reading space for macOS. No history, no cookies, no distractions. Perfect companion for Velja and Hyperduck workflows.">
     
     <!-- Open Graph / Twitter -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://roelvangils.github.io/phim/">
-    <meta property="og:title" content="Phim - Minimalistic macOS Web Viewer">
-    <meta property="og:description" content="A distraction-free web viewer for macOS with intelligent vibrancy effects and privacy-focused browsing.">
+    <meta property="og:title" content="Phim - This is not a browser">
+    <meta property="og:description" content="An ephemeral reading space for macOS. No history, no cookies, no distractions. Perfect companion for Velja and Hyperduck workflows.">
     <meta property="og:image" content="https://raw.githubusercontent.com/roelvangils/phim/main/icon.png">
     
     <style>
@@ -315,7 +315,9 @@
         <div class="container">
             <img src="https://raw.githubusercontent.com/roelvangils/phim/main/icon.png" alt="Phim Icon" class="app-icon">
             <h1>Phim</h1>
-            <p class="tagline">A minimalistic macOS web viewer for focused reading and distraction-free browsing</p>
+            <p style="font-size: 2rem; font-weight: 600; margin-bottom: 1rem; color: var(--text);">This is not a browser.</p>
+            <p class="tagline">It's an ephemeral reading space. No history. No cookies. No distractions.<br>
+            Perfect companion for <a href="https://sindresorhus.com/velja" style="color: var(--primary); text-decoration: none; font-weight: 500;">Velja</a> and <a href="https://sindresorhus.com/hyperduck" style="color: var(--primary); text-decoration: none; font-weight: 500;">Hyperduck</a> workflows.</p>
             
             <div class="buttons">
                 <a href="https://github.com/roelvangils/phim/releases/download/v0.1.0/Phim-0.1.0.zip" class="btn btn-primary">
@@ -385,6 +387,32 @@
                     <h3>Auto Updates</h3>
                     <p>Built-in Sparkle framework keeps Phim up to date automatically</p>
                 </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="installation" style="background: var(--bg);">
+        <div class="container">
+            <h2 class="section-title">Perfect for Link Routing</h2>
+            <p class="section-subtitle">Phim works beautifully as a lightweight viewer in your link routing workflow</p>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+                <div style="padding: 2rem; background: var(--card-bg); border-radius: 16px;">
+                    <h3 style="margin-bottom: 1rem;">🔗 With Velja</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Set Phim as a browser option in <a href="https://sindresorhus.com/velja" style="color: var(--primary);">Velja</a> for specific websites or patterns. Perfect for reading documentation, articles, or any content you want to view without polluting your browser history.</p>
+                    <p style="font-family: 'SF Mono', Monaco, monospace; font-size: 0.9rem; padding: 0.5rem; background: var(--bg); border-radius: 8px;">Velja → Settings → Add Phim</p>
+                </div>
+                
+                <div style="padding: 2rem; background: var(--card-bg); border-radius: 16px;">
+                    <h3 style="margin-bottom: 1rem;">🦆 With Hyperduck</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Use Phim as your quick-look browser in <a href="https://sindresorhus.com/hyperduck" style="color: var(--primary);">Hyperduck</a>. Hover over links to preview them in Phim's clean, ephemeral environment without leaving your current context.</p>
+                    <p style="font-family: 'SF Mono', Monaco, monospace; font-size: 0.9rem; padding: 0.5rem; background: var(--bg); border-radius: 8px;">Hyperduck → Preferences → Set Phim</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 3rem; padding: 2rem; background: var(--card-bg); border-radius: 16px; text-align: center;">
+                <h3 style="margin-bottom: 1rem;">Why Ephemeral?</h3>
+                <p style="color: var(--text-secondary); max-width: 600px; margin: 0 auto;">Every Phim session starts fresh. No cookies, no cache, no history. When you close Phim, it's like it was never there. This makes it perfect for reading sensitive documents, checking competitor websites, or any time you want a truly clean slate.</p>
             </div>
         </div>
     </section>

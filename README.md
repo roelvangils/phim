@@ -9,8 +9,9 @@
   [![Swift](https://img.shields.io/badge/Swift-5.9-orange?style=flat-square)](https://swift.org)
   [![GitHub Pages](https://img.shields.io/badge/docs-GitHub%20Pages-brightgreen?style=flat-square)](https://roelvangils.github.io/phim/)
   
-  A minimalistic macOS web viewer designed for focused reading and content consumption.  
-  Phim provides a distraction-free browsing experience with native macOS integration and intelligent vibrancy effects.
+  **This is not a browser.**  
+  It's an ephemeral reading space. No history. No cookies. No distractions.  
+  Perfect companion for [Velja](https://sindresorhus.com/velja) and [Hyperduck](https://sindresorhus.com/hyperduck) workflows.
   
   [**Download**](https://github.com/roelvangils/phim/releases/latest) • [**Website**](https://roelvangils.github.io/phim/) • [**Documentation**](#usage)
 </div>
@@ -19,11 +20,21 @@
   <img src="screenshot.png" alt="Phim Screenshot" width="100%" style="max-width: 1200px; margin: 2rem 0; border-radius: 12px; box-shadow: 0 20px 60px rgba(0,0,0,0.3);">
 </div>
 
+## Why Phim?
+
+Phim is designed for **ephemeral reading**. Every session starts completely fresh - no cookies, no cache, no history. When you close Phim, it's like it was never there. This makes it perfect for:
+
+- Reading documentation without cluttering your browser
+- Checking competitor websites privately
+- Viewing sensitive documents
+- Quick link previews via Velja or Hyperduck
+- Testing websites in a clean environment
+
 ## Features
 
+- **Truly Ephemeral**: Every session starts fresh, nothing is saved
 - **Minimalist Design**: Borderless window with floating toolbar that appears on hover
 - **Intelligent Vibrancy**: Automatically makes light backgrounds transparent for a native macOS look
-- **Privacy-Focused**: Non-persistent browsing (incognito mode by default)
 - **Multiple Input Methods**: 
   - Command-line arguments
   - Piped input
