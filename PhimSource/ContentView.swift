@@ -393,17 +393,64 @@ struct ToolbarVibrancyView: NSViewRepresentable {
 
 // NSViewRepresentable for the vibrancy effect
 struct VibrancyView: NSViewRepresentable {
-    func makeNSView(context: Context) -> NSVisualEffectView {
+    @Environment(\.colorScheme) var colorScheme
+    
+    func makeNSView(context: Context) -> NSView {
+        let containerView = NSView()
+        
+        // Create vibrancy view with a lighter material
         let vibrancyView = NSVisualEffectView()
         vibrancyView.blendingMode = .behindWindow
         vibrancyView.state = .active
-        vibrancyView.material = .popover
-        return vibrancyView
+        
+        // Use different materials for better visibility
+        // Options from lightest to darkest:
+        // .fullScreenUI - very light, subtle effect
+        // .sheet - light with good visibility  
+        // .menu - medium lightness
+        // .popover - darker, more contrast
+        // .sidebar - dark with strong blur
+        
+        // Using .fullScreenUI for the lightest, most visible effect
+        vibrancyView.material = .fullScreenUI
+        
+        // Add the vibrancy view to container
+        containerView.addSubview(vibrancyView)
+        vibrancyView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            vibrancyView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            vibrancyView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            vibrancyView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            vibrancyView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        // Add a semi-transparent white overlay to brighten the effect
+        let overlayView = NSView()
+        overlayView.wantsLayer = true
+        
+        // Use different opacity based on color scheme
+        // Higher opacity in dark mode to ensure content is visible
+        let opacity = colorScheme == .dark ? 0.25 : 0.08
+        overlayView.layer?.backgroundColor = NSColor.white.withAlphaComponent(opacity).cgColor
+        
+        containerView.addSubview(overlayView)
+        overlayView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            overlayView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            overlayView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            overlayView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            overlayView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+        
+        return containerView
     }
     
-    func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
-        // The material automatically adapts to the system appearance
-        // .popover material changes between light and dark based on system settings
+    func updateNSView(_ nsView: NSView, context: Context) {
+        // Update the overlay opacity when color scheme changes
+        if let overlayView = nsView.subviews.last {
+            let opacity = colorScheme == .dark ? 0.25 : 0.08
+            overlayView.layer?.backgroundColor = NSColor.white.withAlphaComponent(opacity).cgColor
+        }
     }
 }
 
