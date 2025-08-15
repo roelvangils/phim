@@ -1,5 +1,6 @@
 import SwiftUI
 import WebKit
+import UniformTypeIdentifiers
 
 struct ContentView: View {
     let urlString: String
@@ -10,6 +11,8 @@ struct ContentView: View {
     @State private var isInitialLoading: Bool = true
     @State private var hasCompletedInitialLoad: Bool = false
     @State private var webView: WKWebView?
+    @State private var showClipboardPrompt: Bool = false
+    @State private var clipboardURL: String = ""
     
     var body: some View {
         ZStack {
@@ -49,16 +52,53 @@ struct ContentView: View {
                 )
                 .padding(.bottom, 20)
             }
+            
+            // Clipboard URL prompt overlay
+            if showClipboardPrompt {
+                ClipboardPromptView(
+                    url: clipboardURL,
+                    onLoad: {
+                        loadURLFromClipboard(clipboardURL)
+                        showClipboardPrompt = false
+                    },
+                    onCancel: {
+                        showClipboardPrompt = false
+                    }
+                )
+            }
         }
         .frame(width: 1280, height: 832)
         .onAppear {
             currentURL = urlString
             setupKeyboardShortcuts()
+            checkClipboardOnWelcome()
+        }
+        .onDrop(of: [.url, .plainText], isTargeted: nil) { providers in
+            handleDrop(providers: providers)
+            return true
         }
     }
     
     private func setupKeyboardShortcuts() {
         NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+            // Check for Command+V
+            if event.modifierFlags.contains(.command) && event.charactersIgnoringModifiers == "v" {
+                handleCommandV()
+                return nil // Consume the event
+            }
+            
+            // Check for Enter/Escape when prompt is showing
+            if showClipboardPrompt {
+                if event.keyCode == 36 { // Enter key
+                    loadURLFromClipboard(clipboardURL)
+                    showClipboardPrompt = false
+                    return nil
+                } else if event.keyCode == 53 { // Escape key
+                    showClipboardPrompt = false
+                    return nil
+                }
+            }
+            
             // Check if no modifiers are pressed (for single-key shortcuts)
             if event.modifierFlags.intersection(.deviceIndependentFlagsMask) == [] {
                 switch event.charactersIgnoringModifiers {
@@ -92,6 +132,104 @@ struct ContentView: View {
                 }
             }
             return event // Let the event pass through
+        }
+    }
+    
+    private func handleCommandV() {
+        guard let clipboardString = NSPasteboard.general.string(forType: .string),
+              !clipboardString.isEmpty else {
+            return
+        }
+        
+        if isValidURL(clipboardString) {
+            let url = normalizeURL(clipboardString)
+            loadURLFromClipboard(url)
+        }
+    }
+    
+    private func handleDrop(providers: [NSItemProvider]) {
+        for provider in providers {
+            // Try to load as URL first
+            if provider.hasItemConformingToTypeIdentifier("public.url") {
+                provider.loadItem(forTypeIdentifier: "public.url", options: nil) { item, error in
+                    if let url = item as? URL {
+                        DispatchQueue.main.async {
+                            self.loadURLFromClipboard(url.absoluteString)
+                        }
+                    }
+                }
+            }
+            // Try to load as text that might be a URL
+            else if provider.hasItemConformingToTypeIdentifier("public.text") {
+                provider.loadItem(forTypeIdentifier: "public.text", options: nil) { item, error in
+                    if let text = item as? String, self.isValidURL(text) {
+                        DispatchQueue.main.async {
+                            let url = self.normalizeURL(text)
+                            self.loadURLFromClipboard(url)
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    private func checkClipboardOnWelcome() {
+        // Only check clipboard if we're on the welcome page
+        guard urlString.contains("welcome.html") || urlString.isEmpty else {
+            return
+        }
+        
+        guard let clipboardString = NSPasteboard.general.string(forType: .string),
+              !clipboardString.isEmpty,
+              isValidURL(clipboardString) else {
+            return
+        }
+        
+        clipboardURL = normalizeURL(clipboardString)
+        showClipboardPrompt = true
+    }
+    
+    private func isValidURL(_ string: String) -> Bool {
+        // Check for URL patterns
+        if string.hasPrefix("http://") || string.hasPrefix("https://") || string.hasPrefix("file://") {
+            return true
+        }
+        
+        // Check if it might be a domain
+        if string.contains(".") && !string.contains(" ") && !string.hasPrefix("/") {
+            return true
+        }
+        
+        // Check if it's a file path
+        if FileManager.default.fileExists(atPath: string) {
+            return true
+        }
+        
+        return false
+    }
+    
+    private func normalizeURL(_ string: String) -> String {
+        // Already a full URL
+        if string.hasPrefix("http://") || string.hasPrefix("https://") || string.hasPrefix("file://") {
+            return string
+        }
+        
+        // File path
+        if FileManager.default.fileExists(atPath: string) {
+            return URL(fileURLWithPath: string).absoluteString
+        }
+        
+        // Assume it's a domain
+        return "https://\(string)"
+    }
+    
+    private func loadURLFromClipboard(_ url: String) {
+        // Update the webview with the new URL
+        if let webView = webView {
+            if let nsURL = URL(string: url) {
+                webView.load(URLRequest(url: nsURL))
+                currentURL = url
+            }
         }
     }
 }
@@ -266,5 +404,88 @@ struct VibrancyView: NSViewRepresentable {
     func updateNSView(_ nsView: NSVisualEffectView, context: Context) {
         // The material automatically adapts to the system appearance
         // .popover material changes between light and dark based on system settings
+    }
+}
+
+// Clipboard prompt overlay view
+struct ClipboardPromptView: View {
+    let url: String
+    let onLoad: () -> Void
+    let onCancel: () -> Void
+    @State private var isHovered = false
+    
+    var body: some View {
+        ZStack {
+            // Semi-transparent background
+            Color.black.opacity(0.5)
+                .ignoresSafeArea()
+                .onTapGesture {
+                    onCancel()
+                }
+            
+            // Prompt card
+            VStack(spacing: 20) {
+                Image(systemName: "link.circle.fill")
+                    .font(.system(size: 48))
+                    .foregroundColor(.accentColor)
+                
+                Text("URL detected in clipboard")
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                
+                Text(url)
+                    .font(.system(.body, design: .monospaced))
+                    .foregroundColor(.secondary)
+                    .lineLimit(2)
+                    .truncationMode(.middle)
+                    .padding(.horizontal)
+                
+                HStack(spacing: 12) {
+                    Button(action: onCancel) {
+                        HStack {
+                            Image(systemName: "xmark.circle.fill")
+                            Text("Cancel")
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.secondary.opacity(0.2))
+                        .cornerRadius(8)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .keyboardShortcut(.escape, modifiers: [])
+                    
+                    Button(action: onLoad) {
+                        HStack {
+                            Image(systemName: "arrow.right.circle.fill")
+                            Text("Load URL")
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.vertical, 10)
+                        .background(Color.accentColor)
+                        .foregroundColor(.white)
+                        .cornerRadius(8)
+                    }
+                    .buttonStyle(PlainButtonStyle())
+                    .keyboardShortcut(.return, modifiers: [])
+                }
+                
+                Text("Press Enter to load • Escape to cancel")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+            }
+            .padding(30)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color(NSColor.windowBackgroundColor))
+                    .shadow(radius: 20)
+            )
+            .frame(maxWidth: 500)
+            .scaleEffect(isHovered ? 1.02 : 1.0)
+            .onHover { hovering in
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    isHovered = hovering
+                }
+            }
+        }
     }
 }

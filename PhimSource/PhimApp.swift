@@ -169,8 +169,8 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     func applicationDidBecomeActive(_ notification: Notification) {
-        // Check clipboard for URL when app becomes active
-        checkClipboardForURL()
+        // Clipboard checking is now handled by ContentView with a prompt
+        // checkClipboardForURL() - Disabled to prevent automatic loading
     }
     
     private func checkClipboardForURL() {
