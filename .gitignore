@@ -37,3 +37,29 @@ Phim.app/
 *.swp
 *~
 .*.swp
+
+# Test files - exclude all files containing 'test' in the name
+*test*
+*Test*
+*.test.*
+
+# Development folders
+.vscode/
+.idea/
+*.sublime-*
+
+# Node/npm (if ever needed)
+node_modules/
+package-lock.json
+npm-debug.log*
+
+# Python cache (for DMG background generation)
+__pycache__/
+*.pyc
+*.pyo
+
+# Release artifacts (but keep in releases/ folder)
+/*.dmg
+/*.zip
+!releases/*.dmg
+!releases/*.zip
