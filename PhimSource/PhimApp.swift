@@ -42,7 +42,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     var urlString: String = ""
     var window: NSWindow?
     var lastClipboardString: String = ""
-    private let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
+    let updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
     
     func applicationWillFinishLaunching(_ notification: Notification) {
         loadURL()

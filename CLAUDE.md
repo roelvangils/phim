@@ -8,16 +8,37 @@ Phim is a minimalistic macOS web viewer application built with Swift and SwiftUI
 
 ## Build and Run Commands
 
-```bash
-# Build the application
-./build.sh
+### Building from Source
+The app is built using Swift Package Manager (no Xcode required):
 
+```bash
+# Build with Swift Package Manager
+./build_with_spm.sh
+
+# This will:
+# 1. Compile source files from PhimSource/
+# 2. Create Phim.app bundle
+# 3. Copy resources (icon, welcome.html)
+# 4. Sign the app if developer identity is available
+```
+
+The repository structure:
+- `PhimSource/` - Swift source files
+- `Package.swift` - Swift Package Manager configuration
+- `build_with_spm.sh` - Build script using SPM
+- `Phim.app` - Built application (for distribution)
+
+### Running the App
+```bash
 # Run from command line
 ./phim https://example.com
 ./phim /path/to/file.html
 
 # Pipe URLs
 echo "https://example.com" | ./phim
+
+# Install to Applications
+cp -R Phim.app /Applications/
 ```
 
 ## Architecture

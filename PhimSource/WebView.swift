@@ -1,6 +1,8 @@
 import SwiftUI
 import WebKit
 
+
+
 struct WebView: NSViewRepresentable {
     let urlString: String
     var vibrancyEnabled: Bool = true

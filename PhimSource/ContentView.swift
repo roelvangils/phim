@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var webView: WKWebView?
     @State private var showClipboardPrompt: Bool = false
     @State private var clipboardURL: String = ""
+    @State private var lastClipboardContent: String = ""
     
     var body: some View {
         ZStack {
@@ -43,6 +44,13 @@ struct ContentView: View {
             .blur(radius: fancyLoadingEnabled && isInitialLoading && !hasCompletedInitialLoad ? 20 : 0)
             .animation(.easeInOut(duration: 0.25), value: isInitialLoading)
             
+            // Invisible drag strip at the top
+            VStack {
+                DragStripView()
+                    .frame(height: 40)
+                Spacer()
+            }
+            
             // Floating toolbar at bottom
             VStack {
                 Spacer()
@@ -71,7 +79,10 @@ struct ContentView: View {
         .onAppear {
             currentURL = urlString
             setupKeyboardShortcuts()
-            checkClipboardOnWelcome()
+            checkClipboardForURL()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
+            checkClipboardForURL()
         }
         .onDrop(of: [.url, .plainText], isTargeted: nil) { providers in
             handleDrop(providers: providers)
@@ -173,19 +184,24 @@ struct ContentView: View {
         }
     }
     
-    private func checkClipboardOnWelcome() {
-        // Only check clipboard if we're on the welcome page
-        guard urlString.contains("welcome.html") || urlString.isEmpty else {
-            return
-        }
-        
+    private func checkClipboardForURL() {
         guard let clipboardString = NSPasteboard.general.string(forType: .string),
               !clipboardString.isEmpty,
+              clipboardString != lastClipboardContent,
               isValidURL(clipboardString) else {
             return
         }
         
-        clipboardURL = normalizeURL(clipboardString)
+        // Update last clipboard content
+        lastClipboardContent = clipboardString
+        
+        // Don't show prompt if we're already loading this URL
+        let normalizedURL = normalizeURL(clipboardString)
+        if normalizedURL == currentURL {
+            return
+        }
+        
+        clipboardURL = normalizedURL
         showClipboardPrompt = true
     }
     
@@ -224,11 +240,24 @@ struct ContentView: View {
     }
     
     private func loadURLFromClipboard(_ url: String) {
-        // Update the webview with the new URL
-        if let webView = webView {
-            if let nsURL = URL(string: url) {
+        // Update the current URL state first
+        currentURL = url
+        
+        // Load the URL in the webview
+        if let webView = webView, let nsURL = URL(string: url) {
+            DispatchQueue.main.async {
                 webView.load(URLRequest(url: nsURL))
-                currentURL = url
+            }
+        } else {
+            // If webView is not ready, we need to reload the entire view with the new URL
+            if let window = NSApplication.shared.windows.first {
+                window.contentView = NSHostingView(
+                    rootView: ContentView(
+                        urlString: url,
+                        vibrancyEnabled: self.vibrancyEnabled,
+                        fancyLoadingEnabled: self.fancyLoadingEnabled
+                    )
+                )
             }
         }
     }
@@ -391,65 +420,82 @@ struct ToolbarVibrancyView: NSViewRepresentable {
     }
 }
 
-// NSViewRepresentable for the vibrancy effect
+// NSViewRepresentable for the vibrancy effect with semi-transparent overlay
 struct VibrancyView: NSViewRepresentable {
     @Environment(\.colorScheme) var colorScheme
     
     func makeNSView(context: Context) -> NSView {
+        // Create a container view
         let containerView = NSView()
+        containerView.wantsLayer = true
         
-        // Create vibrancy view with a lighter material
+        // Create the vibrancy effect view
         let vibrancyView = NSVisualEffectView()
         vibrancyView.blendingMode = .behindWindow
         vibrancyView.state = .active
+        vibrancyView.material = .underWindowBackground
+        vibrancyView.autoresizingMask = [.width, .height]
+        vibrancyView.frame = containerView.bounds
         
-        // Use different materials for better visibility
-        // Options from lightest to darkest:
-        // .fullScreenUI - very light, subtle effect
-        // .sheet - light with good visibility  
-        // .menu - medium lightness
-        // .popover - darker, more contrast
-        // .sidebar - dark with strong blur
-        
-        // Using .fullScreenUI for the lightest, most visible effect
-        vibrancyView.material = .fullScreenUI
-        
-        // Add the vibrancy view to container
+        // Add vibrancy view to container
         containerView.addSubview(vibrancyView)
-        vibrancyView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            vibrancyView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            vibrancyView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            vibrancyView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            vibrancyView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
         
-        // Add a semi-transparent white overlay to brighten the effect
+        // Create overlay view with 33% opaque white/black background based on appearance
         let overlayView = NSView()
         overlayView.wantsLayer = true
+        let overlayColor = colorScheme == .dark 
+            ? NSColor.black.withAlphaComponent(0.33)
+            : NSColor.white.withAlphaComponent(0.33)
+        overlayView.layer?.backgroundColor = overlayColor.cgColor
+        overlayView.autoresizingMask = [.width, .height]
+        overlayView.frame = containerView.bounds
         
-        // Use different opacity based on color scheme
-        // Higher opacity in dark mode to ensure content is visible
-        let opacity = colorScheme == .dark ? 0.25 : 0.08
-        overlayView.layer?.backgroundColor = NSColor.white.withAlphaComponent(opacity).cgColor
-        
+        // Add overlay on top of vibrancy
         containerView.addSubview(overlayView)
-        overlayView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            overlayView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            overlayView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            overlayView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            overlayView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
         
         return containerView
     }
     
     func updateNSView(_ nsView: NSView, context: Context) {
-        // Update the overlay opacity when color scheme changes
-        if let overlayView = nsView.subviews.last {
-            let opacity = colorScheme == .dark ? 0.25 : 0.08
-            overlayView.layer?.backgroundColor = NSColor.white.withAlphaComponent(opacity).cgColor
+        // Update vibrancy material when needed
+        if let vibrancyView = nsView.subviews.first as? NSVisualEffectView {
+            vibrancyView.material = .underWindowBackground
+        }
+        
+        // Update overlay color based on current appearance
+        if nsView.subviews.count > 1 {
+            let overlayColor = colorScheme == .dark 
+                ? NSColor.black.withAlphaComponent(0.33)
+                : NSColor.white.withAlphaComponent(0.33)
+            nsView.subviews[1].layer?.backgroundColor = overlayColor.cgColor
+        }
+    }
+}
+
+// Invisible drag strip for window dragging
+struct DragStripView: NSViewRepresentable {
+    func makeNSView(context: Context) -> NSView {
+        let view = DragView()
+        view.wantsLayer = true
+        
+        // Make it invisible but still interactive
+        view.layer?.backgroundColor = NSColor.clear.cgColor
+        
+        // Uncomment the next line to see the drag area during testing
+        // view.layer?.backgroundColor = NSColor.red.withAlphaComponent(0.1).cgColor
+        
+        return view
+    }
+    
+    func updateNSView(_ nsView: NSView, context: Context) {}
+    
+    class DragView: NSView {
+        override func mouseDown(with event: NSEvent) {
+            self.window?.performDrag(with: event)
+        }
+        
+        override func acceptsFirstMouse(for event: NSEvent?) -> Bool {
+            return true
         }
     }
 }
