@@ -21,7 +21,7 @@
             overflow: hidden;
             -webkit-font-smoothing: antialiased;
         }
-        
+
         /* Subtle geometric shapes */
         .circle {
             position: absolute;
@@ -48,14 +48,14 @@
             right: 100px;
             background: rgba(147, 112, 219, 0.04);
         }
-        
+
         .container {
             text-align: center;
             z-index: 10;
             width: 100%;
             padding: 40px;
         }
-        
+
         h1 {
             font-size: 42px;
             font-weight: 600;
@@ -63,26 +63,26 @@
             margin-bottom: 12px;
             letter-spacing: -0.5px;
         }
-        
+
         p {
             font-size: 18px;
             color: #666;
             margin-bottom: 50px;
             font-weight: 400;
         }
-        
+
         .drag-area {
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 60px;
         }
-        
+
         .icon-box {
             width: 80px;
             height: 80px;
             background: rgba(255, 255, 255, 0.8);
-            border: 1px solid rgba(200, 200, 210, 0.5);
+            border: 1px dashed rgba(165, 165, 255, 0.5);
             border-radius: 18px;
             display: flex;
             align-items: center;
@@ -90,25 +90,27 @@
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
         }
-        
+
         .app-icon {
             font-size: 14px;
             font-weight: 500;
             color: #333;
+            opacity: 0;
         }
-        
+
         .folder-icon {
             font-size: 14px;
             font-weight: 500;
             color: #333;
+            opacity: 0;
         }
-        
+
         .arrow-container {
             position: relative;
             width: 60px;
             height: 2px;
         }
-        
+
         .arrow-line {
             position: absolute;
             top: 50%;
@@ -118,11 +120,11 @@
             background: #999;
             transform: translateY(-50%);
         }
-        
+
         .arrow-head {
             position: absolute;
             top: 50%;
-            right: 0;
+            right: 5px;
             width: 0;
             height: 0;
             border-left: 10px solid #999;
@@ -130,7 +132,7 @@
             border-bottom: 6px solid transparent;
             transform: translateY(-50%);
         }
-        
+
         /* Ensure SF Pro Display is used */
         @font-face {
             font-family: "SF Pro Display";
@@ -142,21 +144,21 @@
     <div class="circle circle1"></div>
     <div class="circle circle2"></div>
     <div class="circle circle3"></div>
-    
+
     <div class="container">
         <h1>Install Phim</h1>
         <p>Drag Phim to your Applications folder</p>
-        
+
         <div class="drag-area">
             <div class="icon-box">
                 <div class="app-icon">Phim</div>
             </div>
-            
+
             <div class="arrow-container">
                 <div class="arrow-line"></div>
                 <div class="arrow-head"></div>
             </div>
-            
+
             <div class="icon-box">
                 <div class="folder-icon">Apps</div>
             </div>
