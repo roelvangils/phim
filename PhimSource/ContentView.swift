@@ -612,8 +612,8 @@ struct ContentView: View {
             return
         }
         
-        if isValidURL(clipboardString) {
-            let url = normalizeURL(clipboardString)
+        if let extractedURL = extractURLFromText(clipboardString) {
+            let url = normalizeURL(extractedURL)
             loadURLFromClipboard(url)
         }
     }
@@ -662,22 +662,83 @@ struct ContentView: View {
     private func checkClipboardForURL() {
         guard let clipboardString = NSPasteboard.general.string(forType: .string),
               !clipboardString.isEmpty,
-              clipboardString != lastClipboardContent,
-              isValidURL(clipboardString) else {
+              clipboardString != lastClipboardContent else {
             return
         }
         
-        // Update last clipboard content
-        lastClipboardContent = clipboardString
+        // Try to extract URL from clipboard content
+        if let extractedURL = extractURLFromText(clipboardString) {
+            // Update last clipboard content
+            lastClipboardContent = clipboardString
+            
+            // Don't show prompt if we're already loading this URL
+            let normalizedURL = normalizeURL(extractedURL)
+            if normalizedURL == currentURL {
+                return
+            }
+            
+            clipboardURL = normalizedURL
+            showClipboardPrompt = true
+        }
+    }
+    
+    private func extractURLFromText(_ text: String) -> String? {
+        // First try to detect URLs with common patterns
+        let patterns = [
+            // Standard URLs with protocols
+            #"https?://[^\s<>\[\]{}()|\\^`"']+"#,
+            #"file://[^\s<>\[\]{}()|\\^`"']+"#,
+            // Markdown-style links [text](url)
+            #"\[([^\]]+)\]\(([^)]+)\)"#,
+            // HTML anchor tags
+            #"<a[^>]*href=[\"']([^\"']+)[\"'][^>]*>"#,
+            // Plain domains that look like URLs
+            #"(?:^|\s)((?:www\.)?[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+)(?:/[^\s]*)?"#
+        ]
         
-        // Don't show prompt if we're already loading this URL
-        let normalizedURL = normalizeURL(clipboardString)
-        if normalizedURL == currentURL {
-            return
+        for pattern in patterns {
+            if let regex = try? NSRegularExpression(pattern: pattern, options: [.caseInsensitive]) {
+                let range = NSRange(location: 0, length: text.utf16.count)
+                if let match = regex.firstMatch(in: text, options: [], range: range) {
+                    // For markdown links, extract the URL part (second capture group)
+                    if pattern.contains("\\]\\(") && match.numberOfRanges > 2 {
+                        if let urlRange = Range(match.range(at: 2), in: text) {
+                            return String(text[urlRange])
+                        }
+                    }
+                    // For HTML links, extract the href value
+                    else if pattern.contains("href=") && match.numberOfRanges > 1 {
+                        if let urlRange = Range(match.range(at: 1), in: text) {
+                            return String(text[urlRange])
+                        }
+                    }
+                    // For domain patterns without protocol
+                    else if pattern.contains("www\\.") && match.numberOfRanges > 1 {
+                        if let urlRange = Range(match.range(at: 1), in: text) {
+                            let domain = String(text[urlRange])
+                            // Add https:// if it's just a domain
+                            if !domain.hasPrefix("http") {
+                                return domain
+                            }
+                            return domain
+                        }
+                    }
+                    // For standard URLs, extract the whole match
+                    else {
+                        if let urlRange = Range(match.range, in: text) {
+                            return String(text[urlRange])
+                        }
+                    }
+                }
+            }
         }
         
-        clipboardURL = normalizedURL
-        showClipboardPrompt = true
+        // If no URL pattern found, check if the entire text is a valid URL
+        if isValidURL(text) {
+            return text
+        }
+        
+        return nil
     }
     
     private func isValidURL(_ string: String) -> Bool {
