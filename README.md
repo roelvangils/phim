@@ -35,6 +35,8 @@ Phim is designed for **ephemeral reading**. Every session starts completely fres
 - **Truly Ephemeral**: Every session starts fresh, nothing is saved
 - **Minimalist Design**: Borderless window with floating toolbar that appears on hover
 - **Intelligent Vibrancy**: Automatically makes light backgrounds transparent for a native macOS look
+- **Zen Mode**: Distraction-free reader view that extracts and beautifully formats article content
+- **Browser Integration**: Automatically detects and offers to open tabs from your active browser
 - **Multiple Input Methods**: 
   - Command-line arguments
   - Piped input
@@ -45,6 +47,7 @@ Phim is designed for **ephemeral reading**. Every session starts completely fres
   - `O`: Open current URL in default browser
   - `R`: Reload page
   - `C`: Copy current URL
+  - `Z`: Zen Mode (distraction-free reader view)
   - `X`: Close Phim
   - `⌘⇧V`: Toggle vibrancy
   - `⌘⇧L`: Toggle fancy loading animation

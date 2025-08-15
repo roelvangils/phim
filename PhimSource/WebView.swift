@@ -34,6 +34,30 @@ struct WebView: NSViewRepresentable {
         // Additional privacy settings
         configuration.preferences.javaScriptCanOpenWindowsAutomatically = false
         
+        // Add console logging interceptor
+        let consoleScript = """
+        window.console.log = (function(originalLog) {
+            return function(...args) {
+                originalLog.apply(console, args);
+                window.webkit.messageHandlers.consoleLog.postMessage(
+                    args.map(arg => String(arg)).join(' ')
+                );
+            };
+        })(window.console.log);
+        
+        window.console.error = (function(originalError) {
+            return function(...args) {
+                originalError.apply(console, args);
+                window.webkit.messageHandlers.consoleLog.postMessage(
+                    'ERROR: ' + args.map(arg => String(arg)).join(' ')
+                );
+            };
+        })(window.console.error);
+        """
+        
+        let consoleUserScript = WKUserScript(source: consoleScript, injectionTime: .atDocumentStart, forMainFrameOnly: false)
+        configuration.userContentController.addUserScript(consoleUserScript)
+        
         // Only inject vibrancy scripts if enabled
         if vibrancyEnabled {
             let vibrancyScript = """
@@ -163,6 +187,10 @@ struct WebView: NSViewRepresentable {
         webView.allowsBackForwardNavigationGestures = true
         webView.allowsMagnification = true
         webView.navigationDelegate = context.coordinator
+        webView.uiDelegate = context.coordinator
+        
+        // Register message handler for console logging
+        configuration.userContentController.add(context.coordinator, name: "consoleLog")
         
         // Make the WebView background transparent
         webView.setValue(false, forKey: "drawsBackground")
@@ -171,7 +199,11 @@ struct WebView: NSViewRepresentable {
         }
         
         // Provide the webView instance to the parent
+        DebugConsoleManager.shared.info("WebView: Calling webViewProvider with webView instance")
         webViewProvider?(webView)
+        
+        // Also store in the WebViewManager for global access
+        WebViewManager.shared.setWebView(webView)
         
         return webView
     }
@@ -194,11 +226,26 @@ struct WebView: NSViewRepresentable {
         Coordinator(self)
     }
     
-    class Coordinator: NSObject, WKNavigationDelegate {
+    class Coordinator: NSObject, WKNavigationDelegate, WKUIDelegate, WKScriptMessageHandler {
         var parent: WebView
         
         init(_ parent: WebView) {
             self.parent = parent
+        }
+        
+        // Handle JavaScript console messages
+        func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+            if message.name == "consoleLog" {
+                let messageStr = String(describing: message.body)
+                print("WebKit Console: \(messageStr)")
+                
+                // Send to debug console window
+                if messageStr.contains("ERROR:") {
+                    DebugConsoleManager.shared.error("WebKit: \(messageStr)")
+                } else {
+                    DebugConsoleManager.shared.log("WebKit: \(messageStr)")
+                }
+            }
         }
         
         func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
