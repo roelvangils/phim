@@ -10,6 +10,13 @@ brew tap roelvangils/phim
 
 # Install Phim
 brew install --cask phim
+
+# If you get a "damaged app" warning (unsigned app), you can either:
+# Option 1: Install with quarantine disabled (if you trust the source)
+brew install --cask --no-quarantine phim
+
+# Option 2: Remove quarantine after installation
+xattr -cr /Applications/Phim.app
 ```
 
 ## Updating
