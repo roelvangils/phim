@@ -55,14 +55,25 @@ Phim is designed for **ephemeral reading**. Every session starts completely fres
 
 ## Installation
 
+### Install with Homebrew
+The easiest way to install and keep Phim updated:
+```bash
+# Add the tap and install
+brew tap roelvangils/phim
+brew install --cask phim
+
+# Update to the latest version
+brew upgrade --cask phim
+```
+
 ### Direct Download
-Download the latest release from the [Releases](https://github.com/roelvangils/phim/releases) page.
+Download the latest release from the [Releases](https://github.com/roelvangils/phim/releases) page and drag Phim.app to your Applications folder.
 
 ### Build from Source
 ```bash
 git clone https://github.com/roelvangils/phim.git
 cd phim
-./build.sh
+./build_with_spm.sh
 ```
 
 ## Usage

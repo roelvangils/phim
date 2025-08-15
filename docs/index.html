@@ -484,8 +484,34 @@
         <div class="container">
             <h2 class="section-title">Installation</h2>
             
-            <h3>Download</h3>
-            <p>Download the latest release and drag Phim.app to your Applications folder.</p>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin: 2rem 0;">
+                <div style="padding: 2rem; background: var(--card-bg); border-radius: 16px;">
+                    <h3 style="margin-bottom: 1rem;">🍺 Install with Homebrew</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">The easiest way to install and keep Phim updated</p>
+                    <div class="code-block" style="background: var(--bg); margin: 1rem 0;">
+# Add the tap and install
+brew tap roelvangils/phim
+brew install --cask phim
+
+# To update later
+brew upgrade --cask phim
+                    </div>
+                </div>
+                
+                <div style="padding: 2rem; background: var(--card-bg); border-radius: 16px;">
+                    <h3 style="margin-bottom: 1rem;">📦 Direct Download</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">Download the latest release from GitHub</p>
+                    <a href="https://github.com/roelvangils/phim/releases/latest" class="btn" style="margin-top: 1rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="7 10 12 15 17 10"></polyline>
+                            <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                        Download Latest Release
+                    </a>
+                    <p style="color: var(--text-secondary); margin-top: 1rem; font-size: 0.9rem;">Then drag Phim.app to your Applications folder</p>
+                </div>
+            </div>
             
             <h3>Command Line Usage</h3>
             <div class="code-block">
@@ -497,12 +523,16 @@ phim /path/to/file.html
 
 # Pipe a URL
 echo "https://example.com" | phim
+
+# Create alias if installed manually
+alias phim="/Applications/Phim.app/Contents/MacOS/Phim"
             </div>
             
             <h3>Requirements</h3>
             <ul style="list-style: none; padding: 1rem 0;">
-                <li>✓ macOS 14.0 (Sonoma) or later</li>
+                <li>✓ macOS 15.0 (Sequoia) or later</li>
                 <li>✓ Apple Silicon or Intel Mac</li>
+                <li>✓ Homebrew (optional, for brew installation)</li>
             </ul>
         </div>
     </section>
